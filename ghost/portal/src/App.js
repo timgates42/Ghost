@@ -156,6 +156,7 @@ export default class App extends React.Component {
         try {
             // Fetch data from API, links, preview, dev sources
             const {site, member, page, showPopup, popupNotification, lastPage, pageQuery, pageData} = await this.fetchData();
+            const i18n = require('@tryghost/i18n')(site.locale || 'en');
             const state = {
                 site,
                 member,
@@ -166,7 +167,8 @@ export default class App extends React.Component {
                 pageData,
                 popupNotification,
                 action: 'init:success',
-                initStatus: 'success'
+                initStatus: 'success',
+                t: i18n.t
             };
 
             this.handleSignupQuery({site, pageQuery, member});
@@ -412,7 +414,7 @@ export default class App extends React.Component {
         const offersRegex = /^offers\/(\w+?)\/?$/;
         const linkRegex = /^\/portal\/?(?:\/(\w+(?:\/\w+)*))?\/?$/;
         const feedbackRegex = /^\/feedback\/(\w+?)\/(\w+?)\/?$/;
-        
+
         if (path && feedbackRegex.test(path) && hashQuery.get('uuid')) {
             const [, postId, scoreString] = path.match(feedbackRegex);
             const score = parseInt(scoreString);
@@ -800,10 +802,11 @@ export default class App extends React.Component {
 
     /**Get final App level context from App state*/
     getContextFromState() {
-        const {site, member, action, page, lastPage, showPopup, pageQuery, pageData, popupNotification, customSiteUrl} = this.state;
+        const {t, site, member, action, page, lastPage, showPopup, pageQuery, pageData, popupNotification, customSiteUrl} = this.state;
         const contextPage = this.getContextPage({site, page, member});
         const contextMember = this.getContextMember({page: contextPage, member, customSiteUrl});
         return {
+            t,
             site,
             action,
             brandColor: this.getAccentColor(),

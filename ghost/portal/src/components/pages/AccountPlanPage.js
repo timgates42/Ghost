@@ -64,7 +64,7 @@ const Header = ({onBack, showConfirmation, confirmationType}) => {
 };
 
 const CancelSubscriptionButton = ({member, onCancelSubscription, action, brandColor}) => {
-    const {site} = useContext(AppContext);
+    const {site, t} = useContext(AppContext);
     if (!member.paid) {
         return null;
     }
@@ -77,7 +77,7 @@ const CancelSubscriptionButton = ({member, onCancelSubscription, action, brandCo
     if (subscription.cancel_at_period_end) {
         return null;
     }
-    const label = 'Cancel subscription';
+    const label = t('Cancel subscription');
     const isRunning = ['cancelSubscription:running'].includes(action);
     const disabled = (isRunning) ? true : false;
     const isPrimary = !!subscription.cancel_at_period_end;
@@ -110,7 +110,7 @@ const CancelSubscriptionButton = ({member, onCancelSubscription, action, brandCo
 
 // For confirmation flows
 const PlanConfirmationSection = ({plan, type, onConfirm}) => {
-    const {site, action, member, brandColor} = useContext(AppContext);
+    const {site, action, member, brandColor, t} = useContext(AppContext);
     const [reason, setReason] = useState('');
     const subscription = getMemberSubscription({member});
     const isRunning = ['updateSubscription:running', 'checkoutPlan:running', 'cancelSubscription:running'].includes(action);
@@ -130,7 +130,7 @@ const PlanConfirmationSection = ({plan, type, onConfirm}) => {
                 <div className='gh-portal-list mb6'>
                     <section>
                         <div className='gh-portal-list-detail'>
-                            <h3>Account</h3>
+                            <h3>{t('Account')}</h3>
                             <p>{member.email}</p>
                         </div>
                     </section>

@@ -549,12 +549,12 @@ function ProductCardAlternatePrice({price}) {
 }
 
 function ProductCardTrialDays({trialDays, discount, selectedInterval}) {
-    const {site} = useContext(AppContext);
+    const {site, t} = useContext(AppContext);
 
     if (hasFreeTrialTier({site})) {
         if (trialDays) {
             return (
-                <span className="gh-portal-discount-label">{trialDays} days free</span>
+                <span className="gh-portal-discount-label">{t('{{trialDays}} days free', {trialDays})}</span>
             );
         } else {
             return null;
@@ -563,7 +563,7 @@ function ProductCardTrialDays({trialDays, discount, selectedInterval}) {
 
     if (selectedInterval === 'year') {
         return (
-            <span className="gh-portal-discount-label">{discount}% discount</span>
+            <span className="gh-portal-discount-label">{t('{{discount}}% discount', {discount})}</span>
         );
     }
 
@@ -811,7 +811,7 @@ function YearlyDiscount({discount, trialDays}) {
 }
 
 function ProductPriceSwitch({products, selectedInterval, setSelectedInterval}) {
-    const {site} = useContext(AppContext);
+    const {site, t} = useContext(AppContext);
     const {portal_plans: portalPlans} = site;
     if (!portalPlans.includes('monthly') || !portalPlans.includes('yearly')) {
         return null;
@@ -827,7 +827,7 @@ function ProductPriceSwitch({products, selectedInterval, setSelectedInterval}) {
                         setSelectedInterval('month');
                     }}
                 >
-                    Monthly
+                    {t('Monthly')}
                 </button>
                 <button
                     data-test-button='switch-yearly'
@@ -836,7 +836,7 @@ function ProductPriceSwitch({products, selectedInterval, setSelectedInterval}) {
                         setSelectedInterval('year');
                     }}
                 >
-                    Yearly
+                    {t('Yearly')}
                 </button>
             </div>
         </div>
