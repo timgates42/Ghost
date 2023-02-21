@@ -3,6 +3,7 @@
 // Fetches data from the API
 const {config, api, prepareContextResource} = require('../services/proxy');
 const {hbs} = require('../services/handlebars');
+const cacheService = require('../services/get-helper-cache');
 
 const logging = require('@tryghost/logging');
 const errors = require('@tryghost/errors');
@@ -206,7 +207,19 @@ module.exports = async function get(resource, options) {
     apiOptions.context = {member: data.member};
 
     try {
-        const response = await makeAPICall(resource, controllerName, action, apiOptions);
+        const key = `${controllerName}.${action}.${JSON.stringify(apiOptions)}`
+
+        let response;
+
+        if (cacheService?.get(key)) {
+            response = cacheService.get(key);
+        } else {
+            response = await makeAPICall(resource, controllerName, action, apiOptions);
+
+            if (cacheService) {
+                cacheService.set(key, response);
+            }
+        }
 
         // prepare data properties for use with handlebars
         if (response[resource] && response[resource].length) {
